@@ -8,9 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject private var weatherVM = WeatherViewModel()
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        
+        VStack {
+            
+            TextField("City", text: $weatherVM.city) { (_) in
+                
+            } onCommit: {
+                weatherVM.fetchWeatherByCityName(city: weatherVM.city)
+            }.textFieldStyle(RoundedBorderTextFieldStyle())
+            
+            Spacer()
+            
+            switch weatherVM.loadingStatus {
+            case .success:
+                weatherVM.weatherInfo.map {
+                    WeatherView(vm: $0)
+                }
+            case .notFound:
+                InvalidCityView(city: weatherVM.city)
+            case .none, .failure:
+                EmptyView()
+                
+            }
+            
+            Spacer()
+        }
+        .padding()
+        .navigationTitle("Weather")
+        .embedInNavigationView()
     }
 }
 
@@ -19,3 +48,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+

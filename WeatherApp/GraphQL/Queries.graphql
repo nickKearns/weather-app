@@ -1,0 +1,23 @@
+
+query GetWeatherByCityName($city: String!) {
+  getCityByName(name: $city, config: {units: imperial}) {
+    name
+    country
+    weather {
+      summary {
+        title
+        description
+        icon
+      }
+      clouds {
+        all
+        visibility
+        humidity
+      }
+      temperature {
+        actual
+        feelsLike
+      }
+    }
+  }
+}
